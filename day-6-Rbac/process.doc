@@ -1,0 +1,56 @@
+
+step-1 user need to create and generate keys 
+
+step-2 create kuberenetes Role 
+
+step-3 cretae kuberentes role binding to bind role and group
+
+step-4 add usr arn into config map file
+
+# kubectl edit cm aws-auth -n kube-system 
+add user details 
+
+
+aws eks update-kubeconfig --name naresh --profile IAMuser
+
+check the permissions for users
+
+  ==============================================================
+# Importenet commands 
+kubectl get rb 
+kubectl get rolebinding
+kubectl api-resources
+
+# to add user into aws-auth file 
+kubectl edit cm aws-auth -n kube-system
+
+kubectl get cm -n kube-system
+# kubectl edit cm aws-auth -n kube-system 
+
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: v1
+data:
+  mapRoles: |
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      rolearn: arn:aws:iam::992382358200:role/eksctl-naresh-nodegroup-ng-bbb93ed-NodeInstanceRole-9GWNpfucPXRt
+      username: system:node:{{EC2PrivateDNSName}}
+  mapUsers: |
+    - userarn: arn:aws:iam::992382358200:user/eks
+      username: eks
+      groups:
+       - developer
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2024-03-22T02:22:59Z"
+  name: aws-auth
+  namespace: kube-system
+  resourceVersion: "344678"
+  uid: 8167447c-eb81-4108-8653-690369d98c4f
+
+
+
