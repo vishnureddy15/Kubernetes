@@ -1,0 +1,4 @@
+- userarn: arn:aws:iam::992382358200:user/eks
+     username: eks
+     groups:
+     - developer
