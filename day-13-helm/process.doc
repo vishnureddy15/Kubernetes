@@ -1,0 +1,144 @@
+
+-----helm install-----
+
+https://github.com/helm/helm/releases
+
+wget https://get.helm.sh/helm-v3.14.0-linux-amd64.tar.gz
+
+tar -zxvf helm-v3.14.0-linux-amd64.tar.gz
+
+mv linux-amd64/helm /usr/local/bin/helm
+
+chmod 777 /usr/local/bin/helm  # give permissions 
+
+helm version 
+  
+  
+What is Helm Chart?
+
+A Helm chart is a package that contains all the necessary resources to deploy an application to a Kubernetes cluster. This includes YAML configuration files for deployments, services, secrets, and config maps that define the desired state of your application.
+
+To begin with -
+
+Create your first Helm Chart
+
+We are going to create our first helloworld Helm Chart using the following command
+
+helm create helloworld
+BASH
+
+It should create a directory helloworld, you can verify it by using the following ls -lart command
+
+To verify the complete directory structure of the HelmChart please do run the command
+
+tree helloworld
+BASH
+
+1helloworld
+ 2├── charts
+ 3├── Chart.yaml
+ 4├── templates
+ 5│  ├── deployment.yaml
+ 6│  ├── _helpers.tpl
+ 7│  ├── hpa.yaml
+ 8│  ├── ingress.yaml
+ 9│  ├── NOTES.txt
+10│  ├── serviceaccount.yaml
+11│  ├── service.yaml
+12│  └── tests
+13│      └── test-connection.yaml
+14└── values.yaml
+BASH
+
+Great now you created your first Helm Chart — helloworld.
+
+In the next steps we are going to run the helloworld Helm Chart.
+
+Update the service.type from ClusterIP to NodePort inside the values.yml
+
+Before you run your helloworld Helm Chart we need to update the service.type from ClusterIP to NodePort.
+
+The reason for this change is — After installing/running the helloworld Helm Chart we should be able to access the service outside of the kubernetes cluster. And if you do not change the service.type then you will only be able to access the service withing kubernetes cluster.
+
+To update the values.yml, first go inside the directory helloworld
+
+cd helloworld
+BASH
+
+Open values.yml in vi
+After that open the `values.yml` in `vi`
+
+vi values.yaml
+BASH
+
+Update service.type from ClusterIP to NodePort
+
+Look for the service.type block and update its value to NodePort
+
+1service:
+2  type: NodePort
+3  port: 80
+YAML
+
+Install the Helm Chart using command — helm install
+
+Now after updating the values.yml, you can install the Helm Chart.
+
+The helm install command take two arguments -
+
+First argument — Release name that you pick
+Second argument — Chart you want to install
+It should look like -
+
+helm install <FIRST_ARGUMENT_RELEASE_NAME> <SECOND_ARGUMENT_CHART_NAME>
+BASH
+
+Your final command would be
+
+helm install myhelloworld helloworld
+BASH
+
+After running the above command it should return you with -
+
+1NAME: myhellworld
+ 2LAST DEPLOYED: Sat Nov  7 21:48:08 2020
+ 3NAMESPACE: default
+ 4STATUS: deployed
+ 5REVISION: 1
+ 6NOTES:
+ 71. Get the application URL by running these commands:
+ 8  export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services myhellworld-helloworld)
+ 9  export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+10  echo http://$NODE_IP:$NODE_PORT
+Verify the helm install command
+
+Now you need to verify your helm release .i.e. myhelloworld and which can be done by running the helm list command.
+
+helm list -a
+It should return you withe release name which you have just installed .i.e. myhelloworld
+
+1NAME       	NAMESPACE	REVISION	UPDATED                              	STATUS  	CHART           	APP VERSION
+2myhelloworld	default  	1       	2020-11-07 21:48:08.8550677 +0000 UTC	deployed	helloworld-0.1.0	1.16.0
+BASH
+
+Get kubernetes Service details and port
+
+Lets run the kubectl get service command to get the NodePort.
+
+kubectl get service
+And the above command should return you -
+
+1NAME                     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+2kubernetes               ClusterIP   10.233.0.1      <none>        443/TCP        14d
+3myhellworld-helloworld   NodePort    10.233.14.134   <none>        80:30738/TCP   7m10s
+Note: Keep in mind the NodePort number can vary in the range 30000-32767, so you might get different NodePort.
+
+Since my cluster ip is 100.0.0.2 and NodePort is 30738, so I can access my Nginx page of my myhelloworld Helm Chart
+
+
+Note: We can deploy custome application by replacing with custom docker hub or ecr image path in values.yaml in place of nginx image.
+
+
+
+
+
