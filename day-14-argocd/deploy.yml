@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: swiggy-app
+  name: swiggy-appppppp
   labels:
     app: swiggy-app
 spec:
@@ -17,7 +17,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: swiggy-app
-        image: veeranarni/hotstar:latest
+        image: dhruvin30/dhsoniweb
         imagePullPolicy: "Always"
         ports:
         - containerPort: 3000
