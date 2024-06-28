@@ -5,7 +5,7 @@ metadata:
   labels:
     app: swiggy-app
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: swiggy-app
@@ -17,7 +17,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: swiggy-app
-        image: analyticsbd/anonimage
+        image: veeranarni/hotstar:latest
         imagePullPolicy: "Always"
         ports:
         - containerPort: 3000
