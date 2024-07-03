@@ -5,19 +5,20 @@ metadata:
   labels:
     app: swiggy-app
 spec:
-  replicas: 3  # Specifies that there should be 3 replicas (instances) of the application
+  replicas: 3
   selector:
     matchLabels:
-      app: swiggy-app  # Selects Pods with label 'app: swiggy-app'
+      app: swiggy-app
   template:
     metadata:
       labels:
-        app: swiggy-app  # Labels for Pods created by this Deployment
+        app: swiggy-app
     spec:
-      terminationGracePeriodSeconds: 30  # Grace period for termination of Pods
+      terminationGracePeriodSeconds: 30
       containers:
       - name: swiggy-app
-        image: nginx:latest  # Docker image used for the container
-        imagePullPolicy: "Always"  # Always pull the latest version of the image
+        #image: veeranarni/hotstar:latest
+        image: nginx:latest
+        imagePullPolicy: "Always"
         ports:
-        - containerPort: 3000  # Port on which the container listens for incoming traffic
+        - containerPort: 3000
